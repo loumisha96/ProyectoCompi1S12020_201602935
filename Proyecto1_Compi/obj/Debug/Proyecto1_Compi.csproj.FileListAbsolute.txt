@@ -1,0 +1,10 @@
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.csprojAssemblyReference.cache
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.Form1.resources
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.Properties.Resources.resources
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.csproj.GenerateResource.cache
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.csproj.CoreCompileInputs.cache
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\bin\Debug\Proyecto1_Compi.exe.config
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\bin\Debug\Proyecto1_Compi.exe
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\bin\Debug\Proyecto1_Compi.pdb
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.exe
+C:\Users\lourd\Desktop\usac\Compi\Proyecto1_Compi\Proyecto1_Compi\obj\Debug\Proyecto1_Compi.pdb
