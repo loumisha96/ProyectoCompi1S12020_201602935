@@ -36,6 +36,7 @@
             this.analizadorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salidaDeTokensToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.salidaDeErroresToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.guardarComoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -64,7 +65,8 @@
             // 
             this.aBRIRToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.abrirToolStripMenuItem1,
-            this.guardarToolStripMenuItem});
+            this.guardarToolStripMenuItem,
+            this.guardarComoToolStripMenuItem});
             this.aBRIRToolStripMenuItem.Name = "aBRIRToolStripMenuItem";
             this.aBRIRToolStripMenuItem.Size = new System.Drawing.Size(69, 20);
             this.aBRIRToolStripMenuItem.Text = "Opciones";
@@ -82,6 +84,7 @@
             this.guardarToolStripMenuItem.Name = "guardarToolStripMenuItem";
             this.guardarToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.guardarToolStripMenuItem.Text = "Guardar";
+            this.guardarToolStripMenuItem.Click += new System.EventHandler(this.GuardarToolStripMenuItem_Click);
             // 
             // analizadorToolStripMenuItem
             // 
@@ -103,6 +106,13 @@
             this.salidaDeErroresToolStripMenuItem.Size = new System.Drawing.Size(105, 20);
             this.salidaDeErroresToolStripMenuItem.Text = "Salida de Errores";
             this.salidaDeErroresToolStripMenuItem.Click += new System.EventHandler(this.SalidaDeErroresToolStripMenuItem_Click);
+            // 
+            // guardarComoToolStripMenuItem
+            // 
+            this.guardarComoToolStripMenuItem.Name = "guardarComoToolStripMenuItem";
+            this.guardarComoToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.guardarComoToolStripMenuItem.Text = "Guardar Como";
+            this.guardarComoToolStripMenuItem.Click += new System.EventHandler(this.GuardarComoToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -132,6 +142,7 @@
         private System.Windows.Forms.ToolStripMenuItem analizadorToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem salidaDeTokensToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem salidaDeErroresToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem guardarComoToolStripMenuItem;
     }
 }
 

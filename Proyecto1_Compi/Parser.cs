@@ -55,7 +55,6 @@ namespace Proyecto1_Compi
                                 Conjuntos();
                             }
                         }
-
                     }
                     else if (actual.codigo.Equals(21))
                     {
@@ -121,10 +120,9 @@ namespace Proyecto1_Compi
 
                                    AFND = new GenerarAFND(i, tokens, SIGNOS, conjuntos);
                                    AFND.Expresion();
-
+                                    i = tokens.Count;
                                     
                                 }
-
                             }
                             else if (actual.codigo.Equals(25))
                             {

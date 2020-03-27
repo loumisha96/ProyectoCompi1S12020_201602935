@@ -337,8 +337,6 @@ namespace Proyecto1_Compi
             foreach (tokens tok in Token)
             {
                 Console.WriteLine(tok.codigo + "|" + tok.lexema + "|" + tok.tipo + "|" );
-
-
             }
 
         }

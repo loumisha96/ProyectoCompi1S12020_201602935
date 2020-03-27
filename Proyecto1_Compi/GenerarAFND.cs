@@ -22,6 +22,9 @@ namespace Proyecto1_Compi
         StreamWriter file;
         int estado = 0;
         int inicial, final;
+        List<tokens> expr;
+        tokens tokinicial, tokfinal;
+        Arbol arbol;
         public GenerarAFND(int i, List<tokens> tokens, List<signos> signos, List<Conjuntos> conjuntos)
         {
             this.i = i;
@@ -41,15 +44,14 @@ namespace Proyecto1_Compi
             actual = tokens.ElementAt(i);
             if (actual.codigo.Equals(27))
             {
-                
                 i++;
                 actual = tokens.ElementAt(i);
                 if (actual.codigo.Equals(26))
                 {
+                    //arbol = new Arbol(estado);
                     i++;
                     actual = tokens.ElementAt(i);
                     tokens Opaux = null;
-                    
                     while (actual.codigo != 16)
                     {
                         if (actual.tipo.Equals("Operacion"))
@@ -69,30 +71,30 @@ namespace Proyecto1_Compi
                         else
                         {
                             
-                            graph(Opaux);
+                            Graph(Opaux);
                             Opaux = null;
                             i++;
                             
                             actual = tokens.ElementAt(i);
 
                         }
-                        while (verificar() == true)
+                        while (Verificar() == true)
                         {
                             nodoP auxiliar= pila.peek();
-                            graphnodoP(auxiliar);
+                            GraphnodoP(auxiliar);
                         }
                             
                     }
                     while (pila.primero != null)
                     {
                         nodoP aux = pila.peek();
-                        
-                        graphnodoP(aux);
+                        GraphnodoP(aux);
                         
                     }
                     estado = 0;
-                    file.WriteLine("}");
+                     file.WriteLine("}");
                     file.Close();
+                    arbol.reporte(path);
                     i++;
                     actual = tokens.ElementAt(i);
                     while (actual.codigo.Equals(5) || actual.codigo.Equals(6))
@@ -101,9 +103,7 @@ namespace Proyecto1_Compi
                         actual = tokens.ElementAt(i);
                     }
                     if (actual.codigo.Equals(7))
-                    {
                         Expresion();
-                    }
                     while (actual.codigo.Equals(5) || actual.codigo.Equals(6))
                     {
                         i++;
@@ -115,9 +115,9 @@ namespace Proyecto1_Compi
                 }
             }
         }
-        public void graficarDisyuncion(tokens a, tokens b)
+        public void GraficarDisyuncion(tokens a, tokens b)
         {
-            if (a.inicial == 0 && b.inicial == 0)
+            if (a.final == 0 && b.final == 0)
             {
                 inicial = estado;
                 file.WriteLine(estado + "->{" + (estado + 1) + "}[label=\"E\"]");
@@ -134,7 +134,7 @@ namespace Proyecto1_Compi
                 final = estado;
                 estado++;
             }
-            else if (a.inicial != 0 && b.inicial != 0)
+            else if (a.final != 0 && b.final != 0)
             {
                 estado++;
                 inicial = estado;
@@ -144,8 +144,10 @@ namespace Proyecto1_Compi
                 file.WriteLine(a.final + "->{" + estado + "}[label=\"E\"]");
                 file.WriteLine(b.final + "->{" + estado + "}[label=\"E\"]");
                 final = estado;
+                
+
             }
-            else if (a.inicial != 0 && b.inicial == 0)
+            else if (a.final != 0 && b.final == 0)
             {
                 estado++;
                 inicial = estado;
@@ -161,7 +163,7 @@ namespace Proyecto1_Compi
             }
 
         }
-        public void graficarConcatenacion(tokens a, tokens b)
+        public void GraficarConcatenacion(tokens a, tokens b)
         {
             if (a.final == 0 && b.inicial == 0)
             {
@@ -196,13 +198,11 @@ namespace Proyecto1_Compi
                 final = b.final;
             }
         }
-        public void graficar0oUnaVez(tokens a)
+        public void Graficar0oUnaVez(tokens a)
         {
             if (a.final == 0)
             {
-                
                 inicial = estado;
-                
                 file.WriteLine(estado + "->{" + (estado + 1) + "}[label=\"E\"]");
                 estado++;
                 file.WriteLine(estado + "->{" + (estado + 1) + "}[label=" + a.lexema + "]");
@@ -221,7 +221,6 @@ namespace Proyecto1_Compi
             {
                 estado++;
                 inicial =estado;
-                
                 file.WriteLine((inicial) + "->{" + a.inicial + "}[label=\"E\"]");
                 file.WriteLine((inicial) + "->{" + (estado+1) + "}[label=\"E\"]");
                 estado++;
@@ -234,24 +233,45 @@ namespace Proyecto1_Compi
                 estado++;
             }
         }
-        public void graficar1oMasVeces(tokens a)
+        public void Graficar1oMasVeces(tokens a)
         {
-            file.WriteLine(estado + "->{" + (estado + 1) + "}[label=" + a.lexema + "]");
-            estado++;
-            inicial = estado;
-            file.WriteLine(inicial + "->{" + (estado + 1) + "}[label=\"E\"]");
-            estado++;
-            file.WriteLine(estado + "->{" + (estado + 1) + "}[label=" + a.lexema + "]");
-            estado++;
-            file.WriteLine(estado + "->{" + (estado - 1) + "}[label=\"E\"]");
-            file.WriteLine(estado + "->{" + (estado + 1) + "}[label=\"E\"]");
-            estado++;
-            file.WriteLine(inicial + "->{" + estado + "}[label=\"E\"]");
-            estado++;
-            final = estado;
+            if (a.final == 0)
+            {
+                file.WriteLine(estado + "->{" + (estado + 1) + "}[label=" + a.lexema + "]");
+                estado++;
+                inicial = estado;
+                file.WriteLine(inicial + "->{" + (estado + 1) + "}[label=\"E\"]");
+                estado++;
+                file.WriteLine(estado + "->{" + (estado + 1) + "}[label=" + a.lexema + "]");
+                estado++;
+                file.WriteLine(estado + "->{" + (estado - 1) + "}[label=\"E\"]");
+                file.WriteLine(estado + "->{" + (estado + 1) + "}[label=\"E\"]");
+                estado++;
+                file.WriteLine(inicial + "->{" + estado + "}[label=\"E\"]");
+                estado++;
+                final = estado;
+            }
+            else
+            {
+                if (a.codOp.Equals(8))
+                    GraficarDisyuncion(a.a, a.b);
+                else if (a.codOp.Equals(9))
+                    GraficarConcatenacion(a.a, a.b);
+                else if (a.codOp.Equals(10))
+                    Graficar0oUnaVez(a);
+                else if (a.codOp.Equals(11))
+                    Graficar1oMasVeces(a);
+                else if (a.codOp.Equals(12))
+                    GraficarKleene(a);
+                int i = final+1;
+                GraficarKleene(a);
+                int f = a.final+1;
+                file.WriteLine(i + "->{" + f + "}[label=\"E\"]");
+
+            }
 
         }
-        public void graficarKleene(tokens a)
+        public void GraficarKleene(tokens a)
         {
             if (a.final == 0)
             {
@@ -270,7 +290,6 @@ namespace Proyecto1_Compi
             {
                 inicial = estado;
                 file.WriteLine(a.final + "->{" + a.inicial + "}[label=\"E\"]");
-
                 file.WriteLine((a.inicial-1) + "->{" + a.inicial + "}[label=\"E\"]");
                 file.WriteLine((a.inicial-1) + "->{" + estado + "}[label=\"E\"]");
                 file.WriteLine(a.final + "->{" + (estado ) + "}[label=\"E\"]");
@@ -279,7 +298,7 @@ namespace Proyecto1_Compi
                 
             }
         }
-        public void graph(tokens Opaux)
+        public void Graph(tokens Opaux)
         {
             nodoP aux = pila.peek();
             if (Opaux == null)
@@ -290,135 +309,120 @@ namespace Proyecto1_Compi
             {
                 if (aux.actual.tipo != "Operacion")
                 {
-                    graficarDisyuncion(aux.actual, actual);
+                    //arbol.Disyuncion(aux.actual, actual);
+                    GraficarDisyuncion(aux.actual, actual);
                     pila.Pop();
                     pila.Pop();
-                    tokens tokenP = new tokens(aux.actual, actual, inicial, final);
-                    pila.Push(tokenP);
-                    
+                    tokens tokenP = new tokens(aux.actual, actual, inicial, final,8);
 
+                    //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
+                    pila.Push(tokenP);
                 }
                 else
-                {
-
                     pila.Push(actual);
-                    
-                }
-
             }
             else if (Opaux.codigo.Equals(9))
             {
 
                 if (aux.actual.tipo != "Operacion")
                 {
-                    graficarConcatenacion(aux.actual, actual);
+                    //arbol.Concatenacion(aux.actual, actual);
+                    GraficarConcatenacion(aux.actual, actual);
                     pila.Pop();
                     pila.Pop();
-                    tokens tokenP = new tokens(aux.actual, actual, inicial, final);
+                     tokens tokenP = new tokens(aux.actual, actual, inicial, final,9);
+                    //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                     pila.Push(tokenP);
                 }
                 else
-                {
-                    
                     pila.Push(actual);
-                    
-                }
-                    
-
             }
             else if (Opaux.codigo.Equals(10))
             {
                 pila.Pop();
                 
-                graficar0oUnaVez(actual);
-                tokens tokenP = new tokens(aux.actual, actual, inicial, final);
+                Graficar0oUnaVez(actual);
+                tokens tokenP = new tokens(aux.actual, actual, inicial, final,10);
+                /*arbol.G0oUnaVez(actual);
+                tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);*/
                 pila.Push(tokenP);
                 
             }
             else if (Opaux.codigo.Equals(11))
             {
                 pila.Pop();
-                graficar1oMasVeces(actual);
-                tokens tokenP = new tokens(aux.actual, actual, inicial, final);
+                //arbol.G1oMasVeces(actual);
+                Graficar1oMasVeces(actual);
+                tokens tokenP = new tokens(aux.actual, actual, inicial, final,11);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                 pila.Push(tokenP);
-                
-
             }
             else if (Opaux.codigo.Equals(12))
             {
                 pila.Pop();
-                
-                graficarKleene(actual);
-                tokens tokenP = new tokens(aux.actual, actual, inicial, final);
+                //arbol.kleene(actual);
+                GraficarKleene(actual);
+                 tokens tokenP = new tokens(aux.actual, actual, inicial, final,12);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                 pila.Push(tokenP);
-                
-
             }
             
         }
-        public void graphnodoP(nodoP aux)
+        public void GraphnodoP(nodoP aux)
         {
-            elegirOp(aux);
+            ElegirOp(aux);
         }
-       
-        public void graph1( tokens a, tokens b)
+        public void Graph1( tokens a, tokens b)
         {
             nodoP Opaux = pila.peek();
             if (Opaux.actual.codigo.Equals(8))
             {
-                    graficarDisyuncion(a, b);
+                //arbol.Disyuncion(a, b);
+                   GraficarDisyuncion(a, b);
                     pila.Pop();
-                    tokens tokenP = new tokens(a, b, inicial, final);
-                    pila.Push(tokenP);
-                    
-
-
+                tokens tokenP = new tokens(a, b, inicial, final,8);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
+                pila.Push(tokenP);
             }
             else if (Opaux.actual.codigo.Equals(9))
             {
-
-                
-                
-                    graficarConcatenacion(a,b);
-                    pila.Pop();
-                    
-                    tokens tokenP = new tokens(a, b, inicial, final);
-                    pila.Push(tokenP);
-                    
-
-
+               // arbol.Concatenacion(a, b);
+               GraficarConcatenacion(a,b);
+                pila.Pop();
+                tokens tokenP = new tokens(a, b, inicial, final,9);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
+                pila.Push(tokenP);
             }
             else if (Opaux.actual.codigo.Equals(10))
             {
                 pila.Pop();
-                
-                graficar0oUnaVez(actual);
-                tokens tokenP = new tokens(a, b, inicial, final);
+                //arbol.G0oUnaVez(actual);
+                Graficar0oUnaVez(actual);
+                tokens tokenP = new tokens(a, b, inicial, final,10);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                 pila.Push(tokenP);
                 
             }
             else if (Opaux.actual.codigo.Equals(11))
             {
                 pila.Pop();
-                graficar1oMasVeces(actual);
-                tokens tokenP = new tokens(a, b, inicial, final);
+                //arbol.G1oMasVeces(actual);
+                Graficar1oMasVeces(actual);
+                tokens tokenP = new tokens(a, b, inicial, final,11);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                 pila.Push(tokenP);
-                
-
             }
             else if (Opaux.actual.codigo.Equals(12))
             {
                 pila.Pop();
-                
-                graficarKleene(actual);
-                tokens tokenP = new tokens(a, b, inicial, final);
+                //arbol.kleene(actual);
+                GraficarKleene(actual);
+                tokens tokenP = new tokens(a, b, inicial, final,12);
+                //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                 pila.Push(tokenP);
-                
-
             }
-
         }
-        public Boolean verificar()
+        public Boolean Verificar()
         {
             nodoP auxb = pila.peek();
             pila.Pop();
@@ -448,10 +452,9 @@ namespace Proyecto1_Compi
             }
                 
         }
-        public void elegirOp(nodoP aux)
+        public void ElegirOp(nodoP aux)
         {
             pila.Pop();
-            
             nodoP b = aux;
             aux = pila.peek();
             if (aux.actual.codigo.Equals(8))
@@ -465,31 +468,35 @@ namespace Proyecto1_Compi
             }
             else if (aux.actual.codigo.Equals(10))
             {
-
-
-                graficar0oUnaVez(b.actual);
+                //arbol.G0oUnaVez(b.actual);
+                Graficar0oUnaVez(b.actual);
                 if (pila.Pop() != false)
                 {
-                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final);
+                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final,10);
+                    //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                     pila.Push(tokenP);
                 }
 
             }
             else if (aux.actual.codigo.Equals(11))
             {
-                graficar1oMasVeces(b.actual);
+                //arbol.G1oMasVeces(b.actual);
+                Graficar1oMasVeces(b.actual);
                 if (pila.Pop() != false)
                 {
-                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final);
+                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final,11);
+                    //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                     pila.Push(tokenP);
                 }
             }
             else if (aux.actual.codigo.Equals(12))
             {
-                graficarKleene(b.actual);
+                //arbol.kleene(b.actual);
+               GraficarKleene(b.actual);
                 if (pila.Pop() != false)
                 {
-                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final);
+                    tokens tokenP = new tokens(aux.actual, b.actual, inicial, final,12);
+                    //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                     pila.Push(tokenP);
                 }
             }
@@ -499,43 +506,49 @@ namespace Proyecto1_Compi
 
                 nodoP a = aux;
                 pila.Pop();
-                
                 aux = pila.peek();
                 if (aux.actual.codigo.Equals(8))
                 {
-                    graficarDisyuncion(a.actual, b.actual);
+                    //arbol.Disyuncion(a.actual, b.actual);
+                    GraficarDisyuncion(a.actual, b.actual);
                     if (pila.Pop() != false)
                     {
-                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final);
+                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final,8);
+                        //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                         pila.Push(tokenP);
                     }
                 }
                 else if (aux.actual.codigo.Equals(9))
                 {
-                    graficarConcatenacion(a.actual, b.actual);
+                    //arbol.Concatenacion(a.actual, b.actual);
+                    GraficarConcatenacion(a.actual, b.actual);
                     if (pila.Pop() != false)
                     {
-                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final);
+                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final,9);
+                        //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                         pila.Push(tokenP);
-                        
+
                     }
                 }
                 else if (aux.actual.codigo.Equals(11))
                 {
-                    graficar1oMasVeces(a.actual);
+                    //arbol.G1oMasVeces(a.actual);
+                    Graficar1oMasVeces(a.actual);
                     if (pila.Pop() != false)
                     {
-                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final);
+                        tokens tokenP = new tokens(a.actual, b.actual, inicial, final,11);
+                        //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                         pila.Push(tokenP);
                     }
                 }
                 else if (aux.actual.codigo.Equals(10))
                 {
-
-                    graficar0oUnaVez(a.actual);
+                    //arbol.G0oUnaVez(a.actual);
+                    Graficar0oUnaVez(a.actual);
                     if (pila.Pop() != false)
                     {
-                        tokens tokenP = new tokens(aux.actual, a.actual, inicial, final);
+                        tokens tokenP = new tokens(aux.actual, a.actual, inicial, final,10);
+                        //tokens tokenP = new tokens(arbol, arbol.eInicio, arbol.eFinal);
                         pila.Push(tokenP);
                         pila.Push(b.actual);
                     }
@@ -546,16 +559,14 @@ namespace Proyecto1_Compi
                 pila.Pop();
                 nodoP c = aux;
                 aux = pila.peek();
-                graph1(c.actual, b.actual);
-
-
+                Graph1(c.actual, b.actual);
             }
             else if (aux.actual.codigo.Equals(7))
             {
                 pila.Pop();
                 nodoP c = aux;
                 aux = pila.peek();
-                graph1(c.actual, b.actual);
+                Graph1(c.actual, b.actual);
             }
         }
     }

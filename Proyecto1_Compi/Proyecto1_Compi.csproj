@@ -47,7 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analizador.cs" />
-    <Compile Include="arbol.cs" />
+    <Compile Include="Arbol.cs" />
     <Compile Include="Conjuntos.cs" />
     <Compile Include="Expresion.cs" />
     <Compile Include="Form1.cs">

@@ -22,6 +22,7 @@ namespace Proyecto1_Compi
         }
         public void Validar()
         {
+            
             Console.WriteLine("HACER VALIDACIONES DE EXPRESIONES");
             
         }

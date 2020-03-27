@@ -31,8 +31,7 @@ namespace Proyecto1_Compi
         string read;
         private void AbrirToolStripMenuItem1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog open = new OpenFileDialog(
-                );
+            OpenFileDialog open = new OpenFileDialog();
             open.ShowDialog();
             StreamReader leer = new StreamReader(open.FileName);
             area.Text = leer.ReadToEnd();
@@ -47,20 +46,39 @@ namespace Proyecto1_Compi
              analizador.Analizar();
              Parser parser = new Parser();
              parser.Parsear(analizador.Token);
-             
-
         }
         GenerarXML xml;
         private void SalidaDeTokensToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-             xml = new GenerarXML(analizador.Token);
+            xml = new GenerarXML(analizador.Token);
             xml.SalidaTokens();
         }
 
         private void SalidaDeErroresToolStripMenuItem_Click(object sender, EventArgs e)
         {
             xml.SalidaDeErrores();
+        }
+
+        private void GuardarToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if(read != null)
+                File.WriteAllText(read, area.Text);
+            
+        }
+
+        private void GuardarComoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog save = new SaveFileDialog()
+            {
+                Title = " Seleccione Destino",
+                Filter = "Archivo de Prueba |*.er",
+                AddExtension = true,
+
+            };
+            save.ShowDialog();
+            StreamWriter writer = new StreamWriter(save.FileName);
+            writer.Write(area.Text);
+            writer.Close();
         }
     }
 }
